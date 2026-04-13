@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>无限极直播运营助手</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0056b3', // 无限极企业蓝
+                        secondary: '#ff6b00', // 橙色点缀
+                        dark: '#1a1a2e',
+                        light: '#f8f9fa',
+                        success: '#28a745',
+                        warning: '#ffc107',
+                        danger: '#dc3545',
+                        info: '#17a2b8'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'card': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                        'card-hover': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .transition-all-300 {
+                transition: all 0.3s ease;
+            }
+            .scrollbar-hide::-webkit-scrollbar {
+                display: none;
+            }
+            .scrollbar-hide {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .bg-gradient-primary {
+                background: linear-gradient(135deg, #0056b3 0%, #007bff 100%);
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <div class="flex h-screen overflow-hidden">
+        <!-- 左侧导航栏 -->
+        <aside class="bg-gradient-primary text-white w-64 flex-shrink-0 hidden md:block">
+            <div class="p-4 flex items-center space-x-2">
+                <img src="https://p26-doubao-search-sign.byteimg.com/labis/1ac8c4e3db3fc577e49cbf6b42422f13~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1791603866&x-signature=tbnrj5UF%2BsvdaYTOSUnLliVvJpI%3D" alt="无限极Logo" class="h-8 w-auto">
+                <h1 class="text-xl font-bold">直播运营助手</h1>
+            </div>
+            <nav class="mt-6">
+                <ul>
+                    <li>
+                        <a href="index.html" class="flex items-center px-4 py-3 bg-white bg-opacity-20 hover:bg-opacity-30 transition-all-300">
+                            <i class="fa fa-home w-6"></i>
+                            <span>首页</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="compliance.html" class="flex items-center px-4 py-3 hover:bg-white hover:bg-opacity-20 transition-all-300">
+                            <i class="fa fa-book w-6"></i>
+                            <span>合规知识库</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- 中间内容区 -->
+        <main class="flex-1 overflow-y-auto bg-gray-50 p-6">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">内容审核助手</h2>
+                <div class="flex items-center space-x-4">
+                    <button class="px-4 py-2 bg-primary text-white rounded-md hover:bg-blue-700 transition-all-300 flex items-center">
+                        <i class="fa fa-plus mr-2"></i>
+                        <span>新建审核</span>
+                    </button>
+                    <div class="relative">
+                        <button class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 transition-all-300">
+                            <i class="fa fa-bell text-gray-600"></i>
+                        </button>
+                        <span class="absolute top-0 right-0 w-4 h-4 bg-red-500 rounded-full text-xs text-white flex items-center justify-center">3</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 内容审核区域 -->
+            <div class="bg-white rounded-lg shadow-card p-6 mb-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">上传直播素材进行审核</h3>
+                <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-primary transition-all-300 cursor-pointer" id="dropZone">
+                    <i class="fa fa-cloud-upload text-4xl text-gray-400 mb-4"></i>
+                    <p class="text-gray-600 mb-2">拖拽文件到此处或点击上传</p>
+                    <p class="text-gray-400 text-sm">支持 .txt, .docx, .jpg, .png 等格式</p>
+                    <input type="file" id="fileInput" class="hidden" multiple>
+                    <button class="mt-4 px-4 py-2 bg-primary text-white rounded-md hover:bg-blue-700 transition-all-300">
+                        选择文件
+                    </button>
+                </div>
+
+                <!-- 已选择的文件列表 -->
+                <div id="fileList" class="mt-6 hidden">
+                    <h4 class="text-sm font-medium text-gray-700 mb-2">已选择的文件：</h4>
+                    <ul class="space-y-2" id="selectedFiles">
+                        <!-- 文件项将在这里动态生成 -->
+                    </ul>
+                </div>
+
+                <div class="mt-6 flex justify-end">
+                    <button id="startReviewBtn" class="px-6 py-2 bg-primary text-white rounded-md hover:bg-blue-700 transition-all-300 disabled:bg-gray-300 disabled:cursor-not-allowed" disabled>
+                        开始审核
+                    </button>
+                </div>
+            </div>
+
+            <!-- 审核结果区域 -->
+            <div id="reviewResult" class="bg-white rounded-lg shadow-card p-6 mb-6 hidden">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">审核结果</h3>
+                <div class="border border-gray-200 rounded-lg p-4 mb-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center">
+                            <span class="text-sm font-medium text-gray-700">风险评分：</span>
+                            <span id="riskLevel" class="ml-2 px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs font-semibold">中等风险</span>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="text-sm text-gray-500">发现问题：</span>
+                            <span id="issueCount" class="ml-1 text-sm font-medium text-red-500">5处</span>
+                        </div>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                        <div id="riskBar" class="bg-yellow-500 h-2.5 rounded-full" style="width: 65%"></div>
+                    </div>
+                </div>
+
+                <div class="border border-gray-200 rounded-lg mb-4">
+                    <div class="bg-gray-50 px-4 py-2 border-b border-gray-200">
+                        <h4 class="text-sm font-medium text-gray-700">问题列表</h4>
+                    </div>
+                    <div class="p-4">
+                        <ul id="issueList" class="space-y-3">
+                            <!-- 问题项将在这里动态生成 -->
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="mt-6 flex justify-end">
+                    <button id="copyResultBtn" class="px-6 py-2 bg-primary text-white rounded-md hover:bg-blue-700 transition-all-300">
+                        <i class="fa fa-copy mr-2"></i>复制结果
+                    </button>
+                </div>
+            </div>
+
+            <!-- 最近审核记录 -->
+            <div class="bg-white rounded-lg shadow-card p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold text-gray-800">最近审核记录</h3>
+                    <a href="#" class="text-primary hover:text-blue-700 transition-all-300 text-sm">查看全部</a>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead>
+                            <tr>
+                                <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">文件名</th>
+                                <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">类型</th>
+                                <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">审核时间</th>
+                                <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">状态</th>
+                                <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">618直播活动策划方案.docx</td>
+                                <td class="px-6 py-4 whitespace-nowrap">文档</td>
+                                <td class="px-6 py-4 whitespace-nowrap">2026-04-12 15:30</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                        通过
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <a href="#" class="text-primary hover:text-blue-700 mr-3">查看</a>
+                                    <a href="#" class="text-gray-600 hover:text-gray-900">下载</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">产品宣传海报.png</td>
+                                <td class="px-6 py-4 whitespace-nowrap">图片</td>
+                                <td class="px-6 py-4 whitespace-nowrap">2026-04-11 10:15</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                        需修改
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <a href="#" class="text-primary hover:text-blue-700 mr-3">查看</a>
+                                    <a href="#" class="text-gray-600 hover:text-gray-900">下载</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">直播脚本_v1.2.txt</td>
+                                <td class="px-6 py-4 whitespace-nowrap">文档</td>
+                                <td class="px-6 py-4 whitespace-nowrap">2026-04-10 14:45</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                        未通过
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <a href="#" class="text-primary hover:text-blue-700 mr-3">查看</a>
+                                    <a href="#" class="text-gray-600 hover:text-gray-900">下载</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+
+        <!-- 右侧信息面板 -->
+        <aside class="w-80 bg-white border-l border-gray-200 p-6 overflow-y-auto hidden lg:block">
+            <!-- 用户信息 -->
+            <div class="flex items-center mb-6">
+                <div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white font-bold text-xl">
+                    <i class="fa fa-robot"></i>
+                </div>
+                <div class="ml-4">
+                    <h4 class="font-semibold text-gray-800">直播运营智能助手</h4>
+                    <p class="text-sm text-gray-500">AI 辅助运营</p>
+                </div>
+            </div>
+
+            <!-- 待办事项 -->
+            <div class="mb-6">
+                <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">今日待办</h3>
+                <ul class="space-y-3">
+                    <li class="flex items-center">
+                        <input type="checkbox" class="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary">
+                        <span class="ml-2 text-sm text-gray-700">审核618直播策划方案</span>
+                    </li>
+                    <li class="flex items-center">
+                        <input type="checkbox" class="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary">
+                        <span class="ml-2 text-sm text-gray-700">检查新产品宣传海报</span>
+                    </li>
+                    <li class="flex items-center">
+                        <input type="checkbox" class="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary">
+                        <span class="ml-2 text-sm text-gray-700">更新合规知识库</span>
+                    </li>
+                    <li class="flex items-center">
+                        <input type="checkbox" class="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary">
+                        <span class="ml-2 text-sm text-gray-700">与主播确认直播流程</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- 合规提醒 -->
+            <div class="mb-6">
+                <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">合规提醒</h3>
+                <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <i class="fa fa-exclamation-triangle text-yellow-400"></i>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm text-yellow-700">
+                                新《直播电商监督管理办法》将于2月1日起施行，请及时更新合规知识。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 热门合规知识点 -->
+            <div>
+                <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">热门合规知识</h3>
+                <div class="space-y-4">
+                    <a href="#" class="block p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-all-300">
+                        <h4 class="text-sm font-medium text-gray-800">保健品直播营销10项禁令</h4>
+                        <p class="text-xs text-gray-500 mt-1">了解保健品直播中的禁止行为</p>
+                    </a>
+                    <a href="#" class="block p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-all-300">
+                        <h4 class="text-sm font-medium text-gray-800">AI内容标识要求</h4>
+                        <p class="text-xs text-gray-500 mt-1">AI生成内容的合规标识规范</p>
+                    </a>
+                    <a href="#" class="block p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-all-300">
+                        <h4 class="text-sm font-medium text-gray-800">直播内容保存要求</h4>
+                        <p class="text-xs text-gray-500 mt-1">直播视频保存期限及回放规定</p>
+                    </a>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 文件上传功能
+            const dropZone = document.getElementById('dropZone');
+            const fileInput = document.getElementById('fileInput');
+            const fileList = document.getElementById('fileList');
+            const selectedFiles = document.getElementById('selectedFiles');
+            const startReviewBtn = document.getElementById('startReviewBtn');
+            const reviewResult = document.getElementById('reviewResult');
+            const issueList = document.getElementById('issueList');
+            const riskLevel = document.getElementById('riskLevel');
+            const issueCount = document.getElementById('issueCount');
+            const riskBar = document.getElementById('riskBar');
+            const copyResultBtn = document.getElementById('copyResultBtn');
+            
+            // 全局变量
+            let uploadedFileContent = '';
+            let uploadedFileName = '';
+
+            // 模拟的合规问题数据库
+            const complianceIssues = [
+                { 
+                    keyword: '治疗', 
+                    severity: 'danger', 
+                    message: '禁止宣称治疗效果',
+                    context: '很多用户反馈说，喝了我们的增健口服液后，血压降低了，血糖也稳定了，甚至有用户说连感冒都很少得了。'
+                },
+                { 
+                    keyword: '100%', 
+                    severity: 'warning', 
+                    message: '避免使用绝对化用语',
+                    context: '我们的产品是100%安全的，没有任何副作用，适合所有人群使用。'
+                },
+                { 
+                    keyword: '神奇', 
+                    severity: 'warning', 
+                    message: '避免夸大产品功效',
+                    context: '今天我要给大家介绍一款神奇的产品——无限极增健口服液。'
+                },
+                { 
+                    keyword: '所有人群', 
+                    severity: 'info', 
+                    message: '建议明确适用人群范围',
+                    context: '我们的产品是100%安全的，没有任何副作用，适合所有人群使用。'
+                },
+                { 
+                    keyword: '无效退款', 
+                    severity: 'danger', 
+                    message: '禁止做出效果承诺',
+                    context: '今天在我们直播间购买，不仅可以享受超值优惠，还承诺无效退款。'
+                },
+                { 
+                    keyword: '最佳', 
+                    severity: 'warning', 
+                    message: '避免使用绝对化用语',
+                    context: '这是市场上最佳的保健品，没有之一。'
+                },
+                { 
+                    keyword: '专利技术', 
+                    severity: 'info', 
+                    message: '请确保专利信息真实有效',
+                    context: '我们采用了独家专利技术，提取了多种珍贵中草药的精华。'
+                },
+                { 
+                    keyword: '独家', 
+                    severity: 'warning', 
+                    message: '避免使用绝对化用语',
+                    context: '我们采用了独家专利技术，提取了多种珍贵中草药的精华。'
+                },
+                { 
+                    keyword: '特效', 
+                    severity: 'danger', 
+                    message: '禁止夸大产品功效',
+                    context: '这款产品具有特效，能够快速改善身体状况。'
+                },
+                { 
+                    keyword: '药到病除', 
+                    severity: 'danger', 
+                    message: '禁止宣称治疗效果',
+                    context: '我们的产品虽然不是药物，但效果堪比药物，几乎可以药到病除。'
+                }
+            ];
+
+            dropZone.addEventListener('click', function() {
+                fileInput.click();
+            });
+
+            dropZone.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                dropZone.classList.add('border-primary');
+            });
+
+            dropZone.addEventListener('dragleave', function() {
+                dropZone.classList.remove('border-primary');
+            });
+
+            dropZone.addEventListener('drop', function(e) {
+                e.preventDefault();
+                dropZone.classList.remove('border-primary');
+                
+                if (e.dataTransfer.files.length) {
+                    fileInput.files = e.dataTransfer.files;
+                    handleFiles(e.dataTransfer.files);
+                }
+            });
+
+            fileInput.addEventListener('change', function() {
+                if (this.files.length) {
+                    handleFiles(this.files);
+                }
+            });
+
+            function handleFiles(files) {
+                console.log('=== 开始处理文件 ===');
+                console.log('文件数量:', files.length);
+                
+                // 清空文件列表
+                selectedFiles.innerHTML = '';
+                
+                // 重置全局变量
+                window.uploadedFileContent = '';
+                window.uploadedFileName = '';
+                console.log('全局变量已重置');
+                
+                // 只处理第一个文件
+                const file = files[0];
+                if (!file) {
+                    showToast('请选择一个文件', 'error');
+                    return;
+                }
+                
+                // 设置文件名
+                window.uploadedFileName = file.name;
+                console.log('文件名已设置:', window.uploadedFileName);
+                
+                // 添加文件到列表
+                const li = document.createElement('li');
+                li.className = 'flex items-center justify-between p-2 bg-gray-50 rounded';
+                li.innerHTML = `
+                    <div class="flex items-center">
+                        <i class="fa fa-file-text-o text-primary mr-2"></i>
+                        <span>${file.name}</span>
+                    </div>
+                    <button class="text-gray-400 hover:text-red-500" onclick="this.parentElement.remove(); window.uploadedFileContent=''; window.uploadedFileName=''; startReviewBtn.disabled=true; showToast('已移除文件');">
+                        <i class="fa fa-times"></i>
+                    </button>
+                `;
+                selectedFiles.appendChild(li);
+                
+                // 显示文件列表
+                fileList.classList.remove('hidden');
+                
+                // 检查文件格式
+                if (file.type.startsWith('text/') || file.name.endsWith('.txt') || file.name.endsWith('.md') || 
+                    file.name.endsWith('.html') || file.name.endsWith('.css') || file.name.endsWith('.js')) {
+                    
+                    // 读取文件内容
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        try {
+                            window.uploadedFileContent = e.target.result;
+                            console.log('=== 文件内容已读取 ===');
+                            console.log('文件内容长度:', window.uploadedFileContent.length);
+                            console.log('文件内容前50字符:', window.uploadedFileContent.substring(0, 50) + '...');
+                            
+                            // 验证文件内容
+                            if (!window.uploadedFileContent || window.uploadedFileContent.trim() === '') {
+                                console.error('文件内容为空');
+                                showToast(`文件内容为空：${file.name}`, 'warning');
+                                startReviewBtn.disabled = true;
+                            } else {
+                                console.log('文件内容验证通过');
+                                startReviewBtn.disabled = false;
+                                showToast(`文件读取成功：${file.name}`);
+                            }
+                        } catch (error) {
+                            console.error('读取文件内容时出错:', error);
+                            showToast(`读取文件失败：${file.name}`, 'error');
+                            window.uploadedFileContent = '';
+                            window.uploadedFileName = '';
+                            startReviewBtn.disabled = true;
+                        }
+                    };
+                    
+                    reader.onerror = function() {
+                        console.error('文件读取错误:', reader.error);
+                        showToast(`无法读取文件：${file.name}`, 'error');
+                        window.uploadedFileContent = '';
+                        window.uploadedFileName = '';
+                        startReviewBtn.disabled = true;
+                    };
+                    
+                    reader.readAsText(file);
+                } else {
+                    showToast(`暂不支持的文件格式：${file.name}`, 'warning');
+                    console.warn('不支持的文件类型:', file.type, file.name);
+                    window.uploadedFileContent = '';
+                    window.uploadedFileName = '';
+                    startReviewBtn.disabled = true;
+                }
+            }
+
+            startReviewBtn.addEventListener('click', function() {
+                console.log('=== 开始审核按钮点击 ===');
+                console.log('全局文件内容:', window.uploadedFileContent ? '有内容' : '无内容');
+                console.log('全局文件内容长度:', window.uploadedFileContent ? window.uploadedFileContent.length : 0);
+                console.log('全局文件名:', window.uploadedFileName || '无');
+                
+                // 显示加载状态
+                startReviewBtn.disabled = true;
+                startReviewBtn.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i>审核中...';
+                
+                try {
+                    // 检查是否有文件内容
+                    if (!window.uploadedFileContent || !window.uploadedFileContent.trim()) {
+                        console.error('文件内容为空或未上传');
+                        showToast('请先上传有效的文件内容', 'error');
+                        startReviewBtn.disabled = false;
+                        startReviewBtn.innerHTML = '开始审核';
+                        return;
+                    }
+                    
+                    // 模拟审核过程
+                    setTimeout(() => {
+                        try {
+                            console.log('调用generateReviewResult()');
+                            // 生成审核结果
+                            generateReviewResult();
+                            
+                            // 显示审核完成提示
+                            showToast('审核完成！');
+                        } catch (error) {
+                            console.error('审核过程中发生错误:', error);
+                            console.error('错误堆栈:', error.stack);
+                            showToast('审核失败，请重试', 'error');
+                            
+                            // 重置审核结果区域
+                            const reviewResult = document.getElementById('reviewResult');
+                            const issueList = document.getElementById('issueList');
+                            if (reviewResult) reviewResult.style.display = 'none';
+                            if (issueList) issueList.innerHTML = '';
+                        } finally {
+                            // 恢复按钮状态
+                            startReviewBtn.disabled = false;
+                            startReviewBtn.innerHTML = '开始审核';
+                        }
+                    }, 2000);
+                } catch (error) {
+                    console.error('启动审核过程时发生错误:', error);
+                    console.error('错误堆栈:', error.stack);
+                    showToast('审核失败，请重试', 'error');
+                    
+                    // 恢复按钮状态
+                    startReviewBtn.disabled = false;
+                    startReviewBtn.innerHTML = '开始审核';
+                }
+            });
+
+            copyResultBtn.addEventListener('click', function() {
+                // 获取审核结果文本
+                const riskLevelText = riskLevel.textContent;
+                const issueCountText = issueCount.textContent;
+                
+                let issuesText = '发现的问题：\n';
+                document.querySelectorAll('#issueList li').forEach((issue, index) => {
+                    const title = issue.querySelector('h5').textContent;
+                    const problemWord = issue.querySelector('.font-semibold.text-red-600').textContent;
+                    const context = issue.querySelector('.bg-gray-50').textContent;
+                    
+                    issuesText += `${index + 1}. ${title}\n`;
+                    issuesText += `   问题词语: ${problemWord}\n`;
+                    issuesText += `   上下文: ${context}\n`;
+                    issuesText += `   建议修改为: [请使用合规表述]\n\n`;
+                });
+                
+                const resultText = `审核结果\n风险等级：${riskLevelText}\n问题数量：${issueCountText}\n\n${issuesText}`;
+                
+                // 复制到剪贴板
+                navigator.clipboard.writeText(resultText).then(() => {
+                    showToast('审核结果已复制到剪贴板');
+                }).catch(err => {
+                    showToast('复制失败，请手动复制', 'error');
+                    console.error('复制失败:', err);
+                });
+            });
+
+            function generateReviewResult() {
+                console.log('=== 开始生成审核结果 ===');
+                console.log('使用全局变量:');
+                console.log('文件内容:', window.uploadedFileContent ? '有内容' : '无内容');
+                console.log('文件内容长度:', window.uploadedFileContent ? window.uploadedFileContent.length : 0);
+                console.log('文件名:', window.uploadedFileName || '无');
+                
+                // 获取DOM元素
+                const reviewResultElement = document.getElementById('reviewResult');
+                const issueListElement = document.getElementById('issueList');
+                const riskLevelElement = document.getElementById('riskLevel');
+                const issueCountElement = document.getElementById('issueCount');
+                const riskBarElement = document.getElementById('riskBar');
+                
+                // 检查DOM元素是否存在
+                console.log('reviewResult元素:', reviewResultElement);
+                console.log('issueList元素:', issueListElement);
+                console.log('riskLevel元素:', riskLevelElement);
+                console.log('issueCount元素:', issueCountElement);
+                console.log('riskBar元素:', riskBarElement);
+                
+                // 如果DOM元素不存在，显示错误
+                if (!reviewResultElement || !issueListElement || !riskLevelElement || !issueCountElement || !riskBarElement) {
+                    console.error('缺少必要的DOM元素');
+                    showToast('页面元素加载失败，请刷新页面重试', 'error');
+                    return;
+                }
+                
+                // 显示审核结果区域（先显示，确保用户能看到进度）
+                reviewResultElement.style.display = 'block';
+                console.log('审核结果区域已显示');
+                
+                // 显示加载中的提示
+                issueListElement.innerHTML = `
+                    <li class="text-center py-8">
+                        <i class="fa fa-spinner fa-spin text-3xl text-primary mb-4"></i>
+                        <p class="text-gray-600">正在分析文件内容...</p>
+                        <p class="text-xs text-gray-500 mt-2">文件名：${window.uploadedFileName || '未知'}</p>
+                    </li>
+                `;
+                
+                // 模拟审核过程（给用户更好的体验）
+                setTimeout(() => {
+                    try {
+                        console.log('文件名:', window.uploadedFileName);
+                        console.log('文件内容长度:', window.uploadedFileContent ? window.uploadedFileContent.length : 0);
+                        
+                        // 检查是否有上传的文件内容
+                        if (!window.uploadedFileContent || !window.uploadedFileContent.trim()) {
+                            issueListElement.innerHTML = `
+                                <li class="text-center text-red-600 py-8">
+                                    <i class="fa fa-exclamation-circle text-3xl mb-4"></i>
+                                    <p>请先上传有效的文件内容</p>
+                                </li>
+                            `;
+                            showToast('请先上传有效的文件内容', 'error');
+                            return;
+                        }
+                        
+                        // 定义合规规则库
+                        const complianceRules = [
+                    { keyword: '治疗', severity: 'danger', message: '禁止宣称治疗效果' },
+                    { keyword: '治愈', severity: 'danger', message: '禁止宣称治愈效果' },
+                    { keyword: '疗效', severity: 'danger', message: '禁止宣称疗效' },
+                    { keyword: '药到病除', severity: 'danger', message: '禁止夸大产品效果' },
+                    { keyword: '特效', severity: 'danger', message: '禁止使用特效等夸大词汇' },
+                    { keyword: '100%', severity: 'warning', message: '避免使用绝对化用语' },
+                    { keyword: '完全', severity: 'warning', message: '避免使用绝对化用语' },
+                    { keyword: '最佳', severity: 'warning', message: '避免使用绝对化用语' },
+                    { keyword: '唯一', severity: 'warning', message: '避免使用绝对化用语' },
+                    { keyword: '神奇', severity: 'warning', message: '避免夸大产品功效' },
+                    { keyword: '神奇效果', severity: 'warning', message: '避免夸大产品功效' },
+                    { keyword: '无效退款', severity: 'danger', message: '禁止做出效果承诺' },
+                    { keyword: '保证有效', severity: 'danger', message: '禁止做出效果承诺' },
+                    { keyword: '所有人群', severity: 'info', message: '建议明确适用人群范围' },
+                    { keyword: '适合所有人', severity: 'info', message: '建议明确适用人群范围' },
+                    { keyword: '专利技术', severity: 'info', message: '请确保专利信息真实有效' },
+                    { keyword: '独家配方', severity: 'warning', message: '避免使用夸大宣传' },
+                    { keyword: '国家级', severity: 'warning', message: '避免使用夸大宣传' },
+                    { keyword: '权威认证', severity: 'warning', message: '请确保认证信息真实有效' },
+                    { keyword: '无副作用', severity: 'warning', message: '避免做出绝对化安全承诺' }
+                ];
+                
+                // 分割文件内容成行
+                const lines = window.uploadedFileContent.split('\n');
+                const foundIssues = [];
+                
+                // 在文件内容中查找合规问题
+                lines.forEach((line, lineNumber) => {
+                    if (!line.trim()) return;
+                    
+                    complianceRules.forEach(rule => {
+                        const regex = new RegExp(`(${rule.keyword})`, 'gi');
+                        let match;
+                        
+                        while ((match = regex.exec(line)) !== null) {
+                            // 提取上下文（前后各30个字符）
+                            const start = Math.max(0, match.index - 30);
+                            const end = Math.min(line.length, match.index + match[0].length + 30);
+                            const context = line.substring(start, end);
+                            
+                            // 检查是否已经记录过相同位置的问题
+                            const isDuplicate = foundIssues.some(issue => 
+                                issue.lineNumber === lineNumber + 1 && 
+                                issue.column === match.index + 1 &&
+                                issue.keyword === rule.keyword
+                            );
+                            
+                            if (!isDuplicate) {
+                                foundIssues.push({
+                                    ...rule,
+                                    lineNumber: lineNumber + 1,
+                                    column: match.index + 1,
+                                    context: context,
+                                    originalLine: line.trim()
+                                });
+                            }
+                        }
+                    });
+                });
+                
+                console.log('发现的问题数量:', foundIssues.length);
+                
+                // 如果没有发现问题
+                if (foundIssues.length === 0) {
+                    riskLevel.textContent = '通过';
+                    riskLevel.className = 'ml-2 px-2 py-1 bg-green-100 text-green-800 rounded text-xs font-semibold';
+                    issueCount.textContent = '0处';
+                    riskBar.style.width = '10%';
+                    riskBar.className = 'bg-green-500 h-2.5 rounded-full';
+                    issueList.innerHTML = `
+                        <li class="text-center text-green-600 py-4">
+                            <i class="fa fa-check-circle text-2xl mb-2"></i>
+                            <p>未发现合规问题，内容审核通过！</p>
+                            <p class="text-xs text-gray-500 mt-1">文件名：${window.uploadedFileName}</p>
+                        </li>
+                    `;
+                    reviewResult.classList.remove('hidden');
+                    reviewResult.scrollIntoView({ behavior: 'smooth' });
+                    return;
+                }
+                
+                // 计算风险等级
+                const dangerCount = foundIssues.filter(issue => issue.severity === 'danger').length;
+                const warningCount = foundIssues.filter(issue => issue.severity === 'warning').length;
+                
+                let riskLevelText, riskPercentage, riskColorClass, bgColorClass, textColorClass;
+                
+                if (dangerCount > 2) {
+                    riskLevelText = '高风险';
+                    riskPercentage = '90%';
+                    riskColorClass = 'bg-red-500';
+                    bgColorClass = 'bg-red-100';
+                    textColorClass = 'text-red-800';
+                } else if (dangerCount > 0 || warningCount > 3) {
+                    riskLevelText = '中等风险';
+                    riskPercentage = '65%';
+                    riskColorClass = 'bg-yellow-500';
+                    bgColorClass = 'bg-yellow-100';
+                    textColorClass = 'text-yellow-800';
+                } else if (warningCount > 0) {
+                    riskLevelText = '低风险';
+                    riskPercentage = '40%';
+                    riskColorClass = 'bg-blue-500';
+                    bgColorClass = 'bg-blue-100';
+                    textColorClass = 'text-blue-800';
+                } else {
+                    riskLevelText = '通过';
+                    riskPercentage = '10%';
+                    riskColorClass = 'bg-green-500';
+                    bgColorClass = 'bg-green-100';
+                    textColorClass = 'text-green-800';
+                }
+                
+                // 更新风险等级和问题数量
+                riskLevelElement.textContent = riskLevelText;
+                riskLevelElement.className = `ml-2 px-2 py-1 ${bgColorClass} ${textColorClass} rounded text-xs font-semibold`;
+                issueCountElement.textContent = `${foundIssues.length}处`;
+                
+                // 更新风险条
+                riskBarElement.style.width = riskPercentage;
+                riskBarElement.className = `${riskColorClass} h-2.5 rounded-full`;
+                
+                // 生成问题列表
+                issueListElement.innerHTML = '';
+                foundIssues.forEach((issue, index) => {
+                    const li = document.createElement('li');
+                    li.className = 'flex items-start mb-4 pb-4 border-b border-gray-100 last:border-0 last:mb-0 last:pb-0';
+                    
+                    let iconBg;
+                    switch(issue.severity) {
+                        case 'danger': iconBg = 'bg-danger'; break;
+                        case 'warning': iconBg = 'bg-warning'; break;
+                        case 'info': iconBg = 'bg-info'; break;
+                        default: iconBg = 'bg-info'; break;
+                    }
+                    
+                    // 高亮显示问题词语
+                    const regex = new RegExp(`(${issue.keyword})`, 'gi');
+                    const highlightedContext = issue.context.replace(regex, '<span class="bg-red-200 text-red-800 px-1 rounded">$1</span>');
+                    
+                    li.innerHTML = `
+                        <div class="flex-shrink-0 w-6 h-6 rounded-full ${iconBg} flex items-center justify-center text-white text-xs font-bold mt-0.5">${index + 1}</div>
+                        <div class="ml-3 flex-1">
+                            <div class="flex items-center justify-between">
+                                <h5 class="text-sm font-medium text-gray-800">${issue.message}</h5>
+                                <span class="text-xs text-gray-400">第${issue.lineNumber}行</span>
+                            </div>
+                            <p class="text-xs text-gray-600 mt-1">问题词语: <span class="font-semibold text-red-600">${issue.keyword}</span></p>
+                            <div class="mt-2">
+                                <p class="text-xs text-gray-500">上下文:</p>
+                                <p class="text-xs bg-gray-50 p-2 rounded border border-gray-200 mt-1">${highlightedContext}</p>
+                            </div>
+                            <div class="mt-2">
+                                <p class="text-xs text-gray-500">原句:</p>
+                                <p class="text-xs bg-gray-100 p-2 rounded border border-gray-200 mt-1 truncate" title="${issue.originalLine}">${issue.originalLine}</p>
+                            </div>
+                            <div class="mt-2 flex items-center">
+                                <span class="text-xs text-gray-500">建议修改为：</span>
+                                <span class="text-xs text-primary ml-1">"[请使用合规表述]"</span>
+                            </div>
+                        </div>
+                    `;
+                    issueListElement.appendChild(li);
+                });
+                
+
+                
+                        console.log('审核结果生成完成');
+                        
+                    } catch (error) {
+                        console.error('生成审核结果时发生错误:', error);
+                        console.error('错误堆栈:', error.stack);
+                        
+                        // 显示错误信息
+                        issueListElement.innerHTML = `
+                            <li class="text-center text-red-600 py-8">
+                                <i class="fa fa-exclamation-triangle text-3xl mb-4"></i>
+                                <p>审核过程中发生错误</p>
+                                <p class="text-xs text-gray-500 mt-2">请刷新页面重试</p>
+                            </li>
+                        `;
+                        
+                        showToast('审核失败，请重试', 'error');
+                    }
+                }, 1000);
+            }
+
+            function showToast(message, type = 'success') {
+                // 检查是否已存在toast，如果有则移除
+                const existingToast = document.querySelector('.toast-notification');
+                if (existingToast) {
+                    existingToast.remove();
+                }
+                
+                // 创建新的toast
+                const toast = document.createElement('div');
+                const bgColor = type === 'error' ? 'bg-red-500' : 
+                              type === 'warning' ? 'bg-yellow-500' : 'bg-green-500';
+                toast.className = `toast-notification fixed bottom-4 right-4 ${bgColor} text-white px-4 py-2 rounded shadow-lg z-50`;
+                toast.textContent = message;
+                document.body.appendChild(toast);
+                
+                // 3秒后自动移除
+                setTimeout(() => {
+                    toast.remove();
+                }, 3000);
+            }
+        });
+    </script>
+</body>
+</html>

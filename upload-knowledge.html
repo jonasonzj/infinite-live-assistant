@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>上传文档 - 无限极直播运营助手</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0056b3', // 无限极企业蓝
+                        secondary: '#ff6b00', // 橙色点缀
+                        dark: '#1a1a2e',
+                        light: '#f8f9fa',
+                        success: '#28a745',
+                        warning: '#ffc107',
+                        danger: '#dc3545',
+                        info: '#17a2b8'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'card': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                        'card-hover': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .transition-all-300 {
+                transition: all 0.3s ease;
+            }
+            .scrollbar-hide::-webkit-scrollbar {
+                display: none;
+            }
+            .scrollbar-hide {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .bg-gradient-primary {
+                background: linear-gradient(135deg, #0056b3 0%, #007bff 100%);
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <div class="flex h-screen overflow-hidden">
+        <!-- 左侧导航栏 -->
+        <aside class="bg-gradient-primary text-white w-64 flex-shrink-0 hidden md:block">
+            <div class="p-4 flex items-center space-x-2">
+                <img src="https://p26-doubao-search-sign.byteimg.com/labis/1ac8c4e3db3fc577e49cbf6b42422f13~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1791603866&x-signature=tbnrj5UF%2BsvdaYTOSUnLliVvJpI%3D" alt="无限极Logo" class="h-8 w-auto">
+                <h1 class="text-xl font-bold">直播运营助手</h1>
+            </div>
+            <nav class="mt-6">
+                <ul>
+                    <li>
+                        <a href="index.html" class="flex items-center px-4 py-3 hover:bg-white hover:bg-opacity-20 transition-all-300">
+                            <i class="fa fa-home w-6"></i>
+                            <span>首页</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="compliance.html" class="flex items-center px-4 py-3 bg-white bg-opacity-20 hover:bg-opacity-30 transition-all-300">
+                            <i class="fa fa-book w-6"></i>
+                            <span>合规知识库</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- 中间内容区 -->
+        <main class="flex-1 overflow-y-auto bg-gray-50 p-6">
+            <div class="flex items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">上传合规文档</h2>
+                <a href="compliance.html" class="ml-4 px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-all-300 flex items-center">
+                    <i class="fa fa-arrow-left mr-2"></i>
+                    <span>返回知识库</span>
+                </a>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-card p-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">上传新文档</h3>
+                <form id="uploadForm">
+                    <div class="mb-4">
+                        <label for="documentTitle" class="block text-sm font-medium text-gray-700 mb-1">文档标题</label>
+                        <input type="text" id="documentTitle" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="请输入文档标题">
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="documentCategory" class="block text-sm font-medium text-gray-700 mb-1">文档分类</label>
+                        <select id="documentCategory" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                            <option value="">请选择分类</option>
+                            <option value="company">公司规范</option>
+                            <option value="industry">行业法规</option>
+                            <option value="platform">平台规则</option>
+                            <option value="case">案例分析</option>
+                            <option value="faq">常见问题</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="documentFile" class="block text-sm font-medium text-gray-700 mb-1">选择文件</label>
+                        <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-primary transition-all-300 cursor-pointer" id="dropZone">
+                            <i class="fa fa-cloud-upload text-4xl text-gray-400 mb-4"></i>
+                            <p class="text-gray-600 mb-2">拖拽文件到此处或点击上传</p>
+                            <p class="text-gray-400 text-sm">支持 .txt, .docx, .pdf, .jpg, .png 等格式</p>
+                            <input type="file" id="documentFile" class="hidden" multiple>
+                            <button type="button" id="selectFileBtn" class="mt-4 px-4 py-2 bg-primary text-white rounded-md hover:bg-blue-700 transition-all-300">
+                                选择文件
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="documentDescription" class="block text-sm font-medium text-gray-700 mb-1">文档描述</label>
+                        <textarea id="documentDescription" rows="4" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="请输入文档描述"></textarea>
+                    </div>
+
+                    <div class="flex justify-end">
+                        <button type="button" id="cancelBtn" class="px-6 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-all-300 mr-3">
+                            取消
+                        </button>
+                        <button type="button" id="uploadBtn" class="px-6 py-2 bg-primary text-white rounded-md hover:bg-blue-700 transition-all-300">
+                            上传
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropZone = document.getElementById('dropZone');
+            const fileInput = document.getElementById('documentFile');
+            const selectFileBtn = document.getElementById('selectFileBtn');
+            const uploadBtn = document.getElementById('uploadBtn');
+            const cancelBtn = document.getElementById('cancelBtn');
+            const uploadForm = document.getElementById('uploadForm');
+
+            selectFileBtn.addEventListener('click', function() {
+                fileInput.click();
+            });
+
+            dropZone.addEventListener('click', function() {
+                fileInput.click();
+            });
+
+            dropZone.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                dropZone.classList.add('border-primary');
+            });
+
+            dropZone.addEventListener('dragleave', function() {
+                dropZone.classList.remove('border-primary');
+            });
+
+            dropZone.addEventListener('drop', function(e) {
+                e.preventDefault();
+                dropZone.classList.remove('border-primary');
+                
+                if (e.dataTransfer.files.length) {
+                    fileInput.files = e.dataTransfer.files;
+                    handleFiles(e.dataTransfer.files);
+                }
+            });
+
+            fileInput.addEventListener('change', function() {
+                if (this.files.length) {
+                    handleFiles(this.files);
+                }
+            });
+
+            function handleFiles(files) {
+                // 显示已选择的文件
+                const fileName = files[0].name;
+                const fileSize = (files[0].size / 1024).toFixed(2);
+                
+                // 在上传区域显示文件名
+                const fileInfo = document.createElement('div');
+                fileInfo.className = 'mt-4 p-3 bg-gray-50 rounded-lg flex items-center justify-between';
+                fileInfo.innerHTML = `
+                    <div class="flex items-center">
+                        <i class="fa fa-file-text-o text-primary mr-2"></i>
+                        <span>${fileName}</span>
+                    </div>
+                    <span class="text-xs text-gray-500">${fileSize} KB</span>
+                `;
+                
+                // 清除之前的文件信息
+                const existingFileInfo = dropZone.querySelector('.mt-4.p-3.bg-gray-50');
+                if (existingFileInfo) {
+                    existingFileInfo.remove();
+                }
+                
+                dropZone.appendChild(fileInfo);
+                
+                showToast(`已选择文件：${fileName}`);
+            }
+
+            uploadBtn.addEventListener('click', function() {
+                const title = document.getElementById('documentTitle').value;
+                const category = document.getElementById('documentCategory').value;
+                const description = document.getElementById('documentDescription').value;
+                const file = document.getElementById('documentFile').files[0];
+
+                if (!title) {
+                    showToast('请输入文档标题', 'error');
+                    return;
+                }
+
+                if (!category) {
+                    showToast('请选择文档分类', 'error');
+                    return;
+                }
+
+                if (!file) {
+                    showToast('请选择要上传的文件', 'error');
+                    return;
+                }
+
+                // 显示上传中状态
+                uploadBtn.disabled = true;
+                uploadBtn.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i>上传中...';
+
+                try {
+                    // 模拟上传过程
+                    setTimeout(() => {
+                        // 模拟将文档内容添加到审核参考数据库
+                        const newRule = {
+                            keyword: title, // 假设标题包含关键词
+                            severity: 'info',
+                            message: '新增合规参考',
+                            context: description || '用户上传的合规参考文档'
+                        };
+                        
+                        // 将新规则存储到localStorage，供审核功能使用
+                        let complianceRules = JSON.parse(localStorage.getItem('complianceRules') || '[]');
+                        complianceRules.push(newRule);
+                        localStorage.setItem('complianceRules', JSON.stringify(complianceRules));
+                        
+                        showToast('文档上传成功！已添加到审核参考数据库');
+                        uploadBtn.disabled = false;
+                        uploadBtn.innerHTML = '上传';
+                        
+                        // 清空表单
+                        uploadForm.reset();
+                        
+                        // 清除文件信息显示
+                        const existingFileInfo = dropZone.querySelector('.mt-4.p-3.bg-gray-50');
+                        if (existingFileInfo) {
+                            existingFileInfo.remove();
+                        }
+                    }, 2000);
+                } catch (error) {
+                    console.error('上传过程中发生错误:', error);
+                    showToast('上传失败，请重试', 'error');
+                    uploadBtn.disabled = false;
+                    uploadBtn.innerHTML = '上传';
+                }
+            });
+
+            cancelBtn.addEventListener('click', function() {
+                uploadForm.reset();
+                showToast('已取消上传');
+            });
+
+            function showToast(message, type = 'success') {
+                // 检查是否已存在toast，如果有则移除
+                const existingToast = document.querySelector('.toast-notification');
+                if (existingToast) {
+                    existingToast.remove();
+                }
+                
+                // 创建新的toast
+                const toast = document.createElement('div');
+                const bgColor = type === 'error' ? 'bg-red-500' : 'bg-green-500';
+                toast.className = `toast-notification fixed bottom-4 right-4 ${bgColor} text-white px-4 py-2 rounded shadow-lg z-50`;
+                toast.textContent = message;
+                document.body.appendChild(toast);
+                
+                // 3秒后自动移除
+                setTimeout(() => {
+                    toast.remove();
+                }, 3000);
+            }
+        });
+    </script>
+</body>
+</html>

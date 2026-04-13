@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>合规知识库 - 无限极直播运营助手</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0056b3', // 无限极企业蓝
+                        secondary: '#ff6b00', // 橙色点缀
+                        dark: '#1a1a2e',
+                        light: '#f8f9fa',
+                        success: '#28a745',
+                        warning: '#ffc107',
+                        danger: '#dc3545',
+                        info: '#17a2b8'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'card': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                        'card-hover': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .transition-all-300 {
+                transition: all 0.3s ease;
+            }
+            .scrollbar-hide::-webkit-scrollbar {
+                display: none;
+            }
+            .scrollbar-hide {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .bg-gradient-primary {
+                background: linear-gradient(135deg, #0056b3 0%, #007bff 100%);
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <div class="flex h-screen overflow-hidden">
+        <!-- 左侧导航栏 -->
+        <aside class="bg-gradient-primary text-white w-64 flex-shrink-0 hidden md:block">
+            <div class="p-4 flex items-center space-x-2">
+                <img src="https://p26-doubao-search-sign.byteimg.com/labis/1ac8c4e3db3fc577e49cbf6b42422f13~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&x-expires=1791603866&x-signature=tbnrj5UF%2BsvdaYTOSUnLliVvJpI%3D" alt="无限极Logo" class="h-8 w-auto">
+                <h1 class="text-xl font-bold">直播运营助手</h1>
+            </div>
+            <nav class="mt-6">
+                <ul>
+                    <li>
+                        <a href="index.html" class="flex items-center px-4 py-3 hover:bg-white hover:bg-opacity-20 transition-all-300">
+                            <i class="fa fa-home w-6"></i>
+                            <span>首页</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="compliance.html" class="flex items-center px-4 py-3 bg-white bg-opacity-20 hover:bg-opacity-30 transition-all-300">
+                            <i class="fa fa-book w-6"></i>
+                            <span>合规知识库</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- 中间内容区 -->
+        <main class="flex-1 overflow-y-auto bg-gray-50 p-6" id="mainContent">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">合规知识库</h2>
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <input type="text" placeholder="搜索知识..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                        <i class="fa fa-search absolute left-3 top-3 text-gray-400"></i>
+                    </div>
+                    <a href="upload-knowledge.html" class="px-4 py-2 bg-primary text-white rounded-md hover:bg-blue-700 transition-all-300 flex items-center">
+                        <i class="fa fa-plus mr-2"></i>
+                        <span>上传文档</span>
+                    </a>
+                    <button class="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-all-300 flex items-center">
+                        <i class="fa fa-filter mr-2"></i>
+                        <span>筛选</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 知识分类导航 -->
+            <div class="bg-white rounded-lg shadow-card p-4 mb-6">
+                <div class="flex flex-wrap gap-2">
+                    <button class="px-4 py-2 bg-primary text-white rounded-md hover:bg-blue-700 transition-all-300">
+                        全部
+                    </button>
+                    <button class="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-all-300">
+                        公司规范
+                    </button>
+                    <button class="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-all-300">
+                        行业法规
+                    </button>
+                    <button class="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-all-300">
+                        平台规则
+                    </button>
+                    <button class="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-all-300">
+                        案例分析
+                    </button>
+                    <button class="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-all-300">
+                        常见问题
+                    </button>
+                </div>
+            </div>
+
+            <!-- 热门知识 -->
+            <div class="mb-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">热门知识</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- 知识卡片 1 -->
+                    <div class="bg-white rounded-lg shadow-card hover:shadow-card-hover transition-all-300 overflow-hidden">
+                        <div class="h-2 bg-red-500"></div>
+                        <div class="p-5">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="px-2 py-1 bg-red-100 text-red-800 text-xs font-semibold rounded">重要</span>
+                                <span class="text-xs text-gray-500">2026-02-01更新</span>
+                            </div>
+                            <h4 class="text-base font-semibold text-gray-800 mb-2">保健品直播营销10项禁令</h4>
+                            <p class="text-sm text-gray-600 mb-4 line-clamp-2">根据《直播电商监督管理办法》和《互联网广告管理办法》，保健品直播营销有10项明确禁止的行为，包括禁止宣称治疗效果、禁止使用医疗术语等。</p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs text-gray-500">
+                                    <i class="fa fa-eye mr-1"></i>1,245
+                                </span>
+                                <a href="#" class="text-primary hover:text-blue-700 text-sm flex items-center">
+                                    查看详情
+                                    <i class="fa fa-chevron-right ml-1 text-xs"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 知识卡片 2 -->
+                    <div class="bg-white rounded-lg shadow-card hover:shadow-card-hover transition-all-300 overflow-hidden">
+                        <div class="h-2 bg-yellow-500"></div>
+                        <div class="p-5">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs font-semibold rounded">新规</span>
+                                <span class="text-xs text-gray-500">2026-01-16更新</span>
+                            </div>
+                            <h4 class="text-base font-semibold text-gray-800 mb-2">《直播电商经营者落实食品安全主体责任监督管理规定》解读</h4>
+                            <p class="text-sm text-gray-600 mb-4 line-clamp-2">2026年3月20日起施行的新规定，明确了直播间禁售的13类食品，以及直播行为的10项禁令，对保健品直播提出了更严格的要求。</p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs text-gray-500">
+                                    <i class="fa fa-eye mr-1"></i>986
+                                </span>
+                                <a href="#" class="text-primary hover:text-blue-700 text-sm flex items-center">
+                                    查看详情
+                                    <i class="fa fa-chevron-right ml-1 text-xs"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 知识卡片 3 -->
+                    <div class="bg-white rounded-lg shadow-card hover:shadow-card-hover transition-all-300 overflow-hidden">
+                        <div class="h-2 bg-blue-500"></div>
+                        <div class="p-5">
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-semibold rounded">指南</span>
+                                <span class="text-xs text-gray-500">2026-01-10更新</span>
+                            </div>
+                            <h4 class="text-base font-semibold text-gray-800 mb-2">AI内容标识要求及实施指南</h4>
+                            <p class="text-sm text-gray-600 mb-4 line-clamp-2">使用AI生成的人物图像、视频、虚拟场景开展直播营销的，必须在直播页面显著位置添加显式标识，并持续展示至AI内容结束。</p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs text-gray-500">
+                                    <i class="fa fa-eye mr-1"></i>872
+                                </span>
+                                <a href="#" class="text-primary hover:text-blue-700 text-sm flex items-center">
+                                    查看详情
+                                    <i class="fa fa-chevron-right ml-1 text-xs"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 最新知识 -->
+            <div class="mb-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">最新知识</h3>
+                <div class="bg-white rounded-lg shadow-card overflow-hidden">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">标题</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">分类</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">更新时间</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">浏览量</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 h-8 w-8 rounded-full bg-red-100 flex items-center justify-center">
+                                            <i class="fa fa-file-text-o text-red-500"></i>
+                                        </div>
+                                        <div class="ml-4">
+                                            <div class="text-sm font-medium text-gray-900">保健品直播营销10项禁令</div>
+                                            <div class="text-xs text-gray-500">根据《直播电商监督管理办法》和《互联网广告管理办法》...</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                        行业法规
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    2026-02-01
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    1,245
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                    <a href="#" class="text-primary hover:text-blue-700">查看</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 h-8 w-8 rounded-full bg-yellow-100 flex items-center justify-center">
+                                            <i class="fa fa-file-text-o text-yellow-500"></i>
+                                        </div>
+                                        <div class="ml-4">
+                                            <div class="text-sm font-medium text-gray-900">《直播电商经营者落实食品安全主体责任监督管理规定》解读</div>
+                                            <div class="text-xs text-gray-500">2026年3月20日起施行的新规定，明确了直播间禁售的13类食品...</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                        行业法规
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    2026-01-16
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    986
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                    <a href="#" class="text-primary hover:text-blue-700">查看</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center">
+                                            <i class="fa fa-file-text-o text-blue-500"></i>
+                                        </div>
+                                        <div class="ml-4">
+                                            <div class="text-sm font-medium text-gray-900">AI内容标识要求及实施指南</div>
+                                            <div class="text-xs text-gray-500">使用AI生成的人物图像、视频、虚拟场景开展直播营销的...</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                        平台规则
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    2026-01-10
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    872
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                    <a href="#" class="text-primary hover:text-blue-700">查看</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 h-8 w-8 rounded-full bg-green-100 flex items-center justify-center">
+                                            <i class="fa fa-file-text-o text-green-500"></i>
+                                        </div>
+                                        <div class="ml-4">
+                                            <div class="text-sm font-medium text-gray-900">无限极产品宣传规范用语指南</div>
+                                            <div class="text-xs text-gray-500">为确保产品宣传合规，公司制定了产品宣传规范用语指南...</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                        公司规范
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    2026-01-05
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    1,532
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                    <a href="#" class="text-primary hover:text-blue-700">查看</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 h-8 w-8 rounded-full bg-purple-100 flex items-center justify-center">
+                                            <i class="fa fa-file-text-o text-purple-500"></i>
+                                        </div>
+                                        <div class="ml-4">
+                                            <div class="text-sm font-medium text-gray-900">直播内容保存与回放要求</div>
+                                            <div class="text-xs text-gray-500">根据《直播电商监督管理办法》，直播视频自结束之日起保存期限不少于3年...</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
+                                        平台规则
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    2025-12-20
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    745
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                    <a href="#" class="text-primary hover:text-blue-700">查看</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-4 flex justify-center">
+                    <nav class="inline-flex rounded-md shadow">
+                        <a href="#" class="py-2 px-4 bg-white border border-gray-300 rounded-l-md text-gray-700 hover:bg-gray-50">
+                            上一页
+                        </a>
+                        <a href="#" class="py-2 px-4 bg-primary border border-primary text-white">
+                            1
+                        </a>
+                        <a href="#" class="py-2 px-4 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50">
+                            2
+                        </a>
+                        <a href="#" class="py-2 px-4 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50">
+                            3
+                        </a>
+                        <a href="#" class="py-2 px-4 bg-white border border-gray-300 rounded-r-md text-gray-700 hover:bg-gray-50">
+                            下一页
+                        </a>
+                    </nav>
+                </div>
+            </div>
+        </main>
+
+        <!-- 右侧信息面板 -->
+        <aside class="w-80 bg-white border-l border-gray-200 p-6 overflow-y-auto hidden lg:block">
+            <!-- 用户信息 -->
+            <div class="flex items-center mb-6">
+                <div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center text-white font-bold text-xl">
+                    张
+                </div>
+                <div class="ml-4">
+                    <h4 class="font-semibold text-gray-800">张经理</h4>
+                    <p class="text-sm text-gray-500">直播运营主管</p>
+                </div>
+            </div>
+
+            <!-- 知识贡献榜 -->
+            <div class="mb-6">
+                <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">知识贡献榜</h3>
+                <ul class="space-y-3">
+                    <li class="flex items-center">
+                        <div class="w-6 h-6 rounded-full bg-yellow-500 flex items-center justify-center text-white text-xs font-bold">
+                            1
+                        </div>
+                        <div class="ml-3 flex-1">
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm font-medium text-gray-800">李合规</span>
+                                <span class="text-xs text-gray-500">28篇</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-1.5 mt-1">
+                                <div class="bg-yellow-500 h-1.5 rounded-full" style="width: 85%"></div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="flex items-center">
+                        <div class="w-6 h-6 rounded-full bg-gray-300 flex items-center justify-center text-white text-xs font-bold">
+                            2
+                        </div>
+                        <div class="ml-3 flex-1">
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm font-medium text-gray-800">王法务</span>
+                                <span class="text-xs text-gray-500">24篇</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-1.5 mt-1">
+                                <div class="bg-gray-300 h-1.5 rounded-full" style="width: 75%"></div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="flex items-center">
+                        <div class="w-6 h-6 rounded-full bg-orange-400 flex items-center justify-center text-white text-xs font-bold">
+                            3
+                        </div>
+                        <div class="ml-3 flex-1">
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm font-medium text-gray-800">张运营</span>
+                                <span class="text-xs text-gray-500">18篇</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-1.5 mt-1">
+                                <div class="bg-orange-400 h-1.5 rounded-full" style="width: 60%"></div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="flex items-center">
+                        <div class="w-6 h-6 rounded-full bg-gray-100 border border-gray-300 flex items-center justify-center text-gray-600 text-xs font-bold">
+                            4
+                        </div>
+                        <div class="ml-3 flex-1">
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm font-medium text-gray-800">刘培训</span>
+                                <span class="text-xs text-gray-500">15篇</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-1.5 mt-1">
+                                <div class="bg-gray-400 h-1.5 rounded-full" style="width: 50%"></div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="flex items-center">
+                        <div class="w-6 h-6 rounded-full bg-gray-100 border border-gray-300 flex items-center justify-center text-gray-600 text-xs font-bold">
+                            5
+                        </div>
+                        <div class="ml-3 flex-1">
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm font-medium text-gray-800">陈市场</span>
+                                <span class="text-xs text-gray-500">12篇</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-1.5 mt-1">
+                                <div class="bg-gray-400 h-1.5 rounded-full" style="width: 40%"></div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- 知识统计 -->
+            <div class="mb-6">
+                <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">知识统计</h3>
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-blue-50 p-3 rounded-lg">
+                        <div class="flex items-center justify-between">
+                            <h5 class="text-sm font-medium text-gray-700">总知识量</h5>
+                            <span class="text-lg font-bold text-blue-500">256</span>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">较上月增长 12%</p>
+                    </div>
+                    <div class="bg-green-50 p-3 rounded-lg">
+                        <div class="flex items-center justify-between">
+                            <h5 class="text-sm font-medium text-gray-700">本月新增</h5>
+                            <span class="text-lg font-bold text-green-500">28</span>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">较上月增长 5%</p>
+                    </div>
+                    <div class="bg-yellow-50 p-3 rounded-lg">
+                        <div class="flex items-center justify-between">
+                            <h5 class="text-sm font-medium text-gray-700">日均浏览</h5>
+                            <span class="text-lg font-bold text-yellow-500">342</span>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">较上月增长 8%</p>
+                    </div>
+                    <div class="bg-purple-50 p-3 rounded-lg">
+                        <div class="flex items-center justify-between">
+                            <h5 class="text-sm font-medium text-gray-700">贡献者</h5>
+                            <span class="text-lg font-bold text-purple-500">18</span>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">较上月增长 2</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 快速操作 -->
+            <div>
+                <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">快速操作</h3>
+                <div class="space-y-2">
+                    <button class="w-full flex items-center justify-center px-4 py-2 bg-primary text-white rounded-md hover:bg-blue-700 transition-all-300">
+                        <i class="fa fa-plus mr-2"></i>
+                        <span>添加知识</span>
+                    </button>
+                    <button class="w-full flex items-center justify-center px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-all-300">
+                        <i class="fa fa-upload mr-2"></i>
+                        <span>批量导入</span>
+                    </button>
+                    <button class="w-full flex items-center justify-center px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-all-300">
+                        <i class="fa fa-download mr-2"></i>
+                        <span>导出报告</span>
+                    </button>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 分类筛选功能
+            const categoryButtons = document.querySelectorAll('.bg-white.border.border-gray-300.text-gray-700.rounded-md');
+            const allButton = document.querySelector('.bg-primary.text-white.rounded-md');
+            
+            categoryButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // 移除所有按钮的活动状态
+                    categoryButtons.forEach(btn => {
+                        btn.classList.remove('bg-primary', 'text-white');
+                        btn.classList.add('bg-white', 'border', 'border-gray-300', 'text-gray-700');
+                    });
+                    
+                    // 移除"全部"按钮的活动状态
+                    allButton.classList.remove('bg-primary', 'text-white');
+                    allButton.classList.add('bg-white', 'border', 'border-gray-300', 'text-gray-700');
+                    
+                    // 添加当前按钮的活动状态
+                    this.classList.remove('bg-white', 'border', 'border-gray-300', 'text-gray-700');
+                    this.classList.add('bg-primary', 'text-white');
+                    
+                    // 这里可以添加实际的筛选逻辑
+                    console.log('筛选分类:', this.textContent.trim());
+                });
+            });
+            
+            allButton.addEventListener('click', function() {
+                // 移除所有按钮的活动状态
+                categoryButtons.forEach(btn => {
+                    btn.classList.remove('bg-primary', 'text-white');
+                    btn.classList.add('bg-white', 'border', 'border-gray-300', 'text-gray-700');
+                });
+                
+                // 添加"全部"按钮的活动状态
+                this.classList.remove('bg-white', 'border', 'border-gray-300', 'text-gray-700');
+                this.classList.add('bg-primary', 'text-white');
+                
+                // 这里可以添加显示全部内容的逻辑
+                console.log('显示全部内容');
+            });
+            
+            // 搜索功能
+            const searchInput = document.querySelector('input[placeholder="搜索知识..."]');
+            
+            searchInput.addEventListener('keyup', function(e) {
+                if (e.key === 'Enter') {
+                    console.log('搜索:', this.value);
+                    // 这里可以添加实际的搜索逻辑
+                }
+            });
+            
+            // 分页功能
+            const pageButtons = document.querySelectorAll('.py-2.px-4.bg-white.border.border-gray-300.text-gray-700.hover\\:bg-gray-50');
+            
+            pageButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // 移除所有页码按钮的活动状态
+                    pageButtons.forEach(btn => {
+                        btn.classList.remove('bg-primary', 'border-primary', 'text-white');
+                        btn.classList.add('bg-white', 'border', 'border-gray-300', 'text-gray-700');
+                    });
+                    
+                    // 如果点击的是页码按钮（不是上一页/下一页），添加活动状态
+                    if (!this.textContent.trim().includes('上一页') && !this.textContent.trim().includes('下一页')) {
+                        this.classList.remove('bg-white', 'border', 'border-gray-300', 'text-gray-700');
+                        this.classList.add('bg-primary', 'border-primary', 'text-white');
+                    }
+                    
+                    console.log('切换页码:', this.textContent.trim());
+                    // 这里可以添加实际的分页逻辑
+                });
+            });
+        });
+    </script>
+</body>
+</html>
